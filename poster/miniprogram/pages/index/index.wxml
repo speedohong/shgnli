@@ -1,0 +1,16 @@
+<canvas wx:if="{{isPaint}}" type="2d" id="canvas" class="canvas" style="width: {{Width}}px; height: {{Height}}px;"></canvas>
+<block wx:if="{{isOver}}">
+	<image  src="{{img}}" style="width: {{Width}}px; height: {{Height}}px;"></image>
+	<button type="primary" bindtap="saveImageToPhotosAlbum">保存到相册</button>
+</block>
+<view class="box" wx:if="{{isReset}}">
+	<block>
+		<view class="showTip">
+			<view class="title">请选择类型</view>
+			<view class="flex">
+				<button type="primary" bindtap="choose">自定义</button>
+				<button class="item" type="primary" open-type="getUserInfo" bindgetuserinfo="bindgetuserinfo">默认微信头像</button>
+			</view>
+		</view>
+	</block>
+</view>
