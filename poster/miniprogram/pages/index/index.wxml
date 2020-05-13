@@ -4,13 +4,20 @@
 	<button type="primary" bindtap="saveImageToPhotosAlbum">保存到相册</button>
 </block>
 <view class="box" wx:if="{{isReset}}">
+    <image class="img" mode="aspectFill" src="../image/02.jpg"></image>
 	<block>
 		<view class="showTip">
 			<view class="title">请选择类型</view>
 			<view class="flex">
-				<button type="primary" bindtap="choose">自定义</button>
-				<button class="item" type="primary" open-type="getUserInfo" bindgetuserinfo="bindgetuserinfo">默认微信头像</button>
+				<!-- <button  class="item"  bindtap="choose2">自定义</button> -->
+				<button  class="item"  bindtap="checkImg">自定义</button>
+				<!-- <button  class="item"  bindtap="doImgSecCheck">doImgSecCheck</button> -->
+				<button class="item"    open-type="getUserInfo" bindgetuserinfo="bindgetuserinfo">默认微信头像</button>
 			</view>
 		</view>
 	</block>
+</view>
+<view class="cutOver" wx:if="{{isCutOver}}">
+    <image class="image" src="{{headerUrl}}"></image>
+	<button class="cutButton" bindtap="cutButton">裁剪完成</button>
 </view>

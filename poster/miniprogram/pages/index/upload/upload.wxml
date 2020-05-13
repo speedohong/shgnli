@@ -1,0 +1,16 @@
+<import src="../../we-cropper/we-cropper.wxml" />
+<view class="cropper-wrapper">
+	<navbar text=""></navbar>
+	<template is="we-cropper" data="{{...cropperOpt}}" />
+	<!-- <view class="ren">dshajkhdjk</view> -->
+	<view class="cropper-buttons" style="color: {{cropperOpt.boundStyle.color}}">
+		<!-- <view class="upload btn" bindtap="back">
+			取消
+		</view> -->
+		<!-- </view> -->
+		<view class="getCropperImage btn" style="background-color: {{cropperOpt.boundStyle.color}};">
+			<button class="btn1" bindtap="back">取消</button>
+			<button class="btn1" bindtap="getCropperImage">保存</button>
+		</view>
+	</view>
+</view>

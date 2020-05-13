@@ -1,0 +1,43 @@
+/* pages/my/upload/upload.wxss */
+/* @import "../../style/common.wxss"; */
+page {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.8);
+
+}
+
+.cropper {
+  position: absolute;
+  bottom: -20px;
+  left: 0;
+}
+
+.cropper-buttons {}
+
+.btn {
+  color: white;
+  font-size: 16px;
+
+}
+
+.btn1 {
+  height:35px;
+  background-color:tomato;
+  line-height:35px;
+  color: white;
+  /* border-radius: 27px; */
+  font-size:35rpx;
+  margin-bottom: 10rpx;
+   padding: 0;
+}
+
+.ren {
+  width: 602rpx;
+  height: 602rpx;
+  background-color: red;
+  position: absolute;
+  top: 404rpx;
+  left: 75rpx;
+  opacity: 0.6;
+  z-index: 99999;
+}
