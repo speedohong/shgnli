@@ -56,9 +56,10 @@ Page({
   },
   paint(userInfo, tempFilePaths) {
     var modules = wx.getSystemInfoSync()
+    var matchHeight=modules.windowHeight
     console.log(modules)
     if (modules.windowHeight < 808) {
-      modules.windowHeight = 808,
+        modules.windowHeight = 808,
         modules.windowWidth = 414
     }
     this.setData({
@@ -80,37 +81,49 @@ Page({
 
           const dpr = wx.getSystemInfoSync().pixelRatio
 
-          canvas.width = res[0].width * dpr
-          canvas.height = res[0].height * dpr
-          console.log(res[0].width)
+          canvas.width = res[0].width * 2
+          canvas.height = res[0].height * 2
+          console.log(canvas.width)
+          console.log(canvas.height)
           const img = canvas.createImage()
           const imgava = canvas.createImage()
-          ctx.fillStyle = "white"
-          ctx.fillRect(0, 0, canvas.width, canvas.height - 50);
+          // ctx.fillStyle = "black"
+          // ctx.fillRect(0, 0, canvas.width/dpr, (canvas.height /dpr) - 50);
           imgava.onload = () => {
             this._imgava = imgava
             ctx.save()
             ctx.beginPath()
-            // if(tempFilePaths){
-            // ctx.arc(res[0].width / 2, 210,300, 0, 2 * Math.PI)
-            // ctx.clip()
-            // ctx.drawImage(this._imgava, 80, 80, 300, 300)
-            // }
-            // else{
-            // ctx.arc(res[0].width / 2, 210,150, 0, 2 * Math.PI)
-            // ctx.fill()
-            // ctx.clip()
             console.log(tempFilePaths)
-            ctx.drawImage(this._imgava, (res[0].width / 2) - 125, 90, 250, 250)
-            // }
-            ctx.restore()
+            var reg = RegExp(/iOS/);
+            if (modules.system.match(reg)) {
+              ctx.drawImage(this._imgava, (res[0].width / 2) - 125, 90, 250, 250)
+            }else{
+              if(matchHeight>667){
+                console.log("drawImage5555555",matchHeight>667)
+                ctx.drawImage(this._imgava, (res[0].width / dpr) - 100, 60, 200, 200)
+              }else{
+                console.log("drawImage",matchHeight>667)
+                ctx.drawImage(this._imgava, (res[0].width / dpr) -90, 40, 180, 180)
+              }
+            } ctx.restore()
           }
           img.onload = () => {
             this._img = img
-            ctx.drawImage(this._img, 0, 0, res[0].width, res[0].height)
+            var reg = RegExp(/iOS/);
+            if (modules.system.match(reg)) {
+              ctx.drawImage(this._img, 0, 0,  modules.windowWidth,  matchHeight-50)
+            }else{
+              if(matchHeight>667){
+                console.log((canvas.width/dpr), (canvas.height /dpr),matchHeight,matchHeight>667)
+                ctx.drawImage(this._img, 0, 0, (canvas.width/dpr)-30,  (canvas.height /dpr)-50)
+              }else{
+                ctx.drawImage(this._img, 0, 0, (canvas.width/dpr)-15,  (canvas.height /dpr)-25)
+              }
+            }
+            
             wx.canvasToTempFilePath({
-              destWidth: canvas.width,
-              destHeight: canvas.height - 50,
+              destWidth: canvas.width-50,
+              destHeight: canvas.height -100,
               canvas: canvas,
               success(res) {
                 wx.hideLoading()
@@ -118,6 +131,13 @@ Page({
                   img: res.tempFilePath,
                   isPaint: false,
                   isOver: true
+                })
+              },
+              fail(err) {
+                wx.hideLoading()
+                wx.showModal({
+                  title: '生成失败',
+                  content: "图片生成失败",
                 })
               }
             })
@@ -165,7 +185,7 @@ Page({
       sourceType: ['album', 'camera'],
       success(res) {
         const tempFilePaths = res.tempFilePaths
-        
+
       }
     })
   },
@@ -279,7 +299,7 @@ Page({
               data: {
                 "Action": "ImageModeration",
                 "Scenes": ["PORN", "POLITICS", "TERRORISM", "TEXT"],
-                "ImageUrl":new wx.serviceMarket.CDN({
+                "ImageUrl": new wx.serviceMarket.CDN({
                   type: 'filePath',
                   filePath: res.tempFilePath,
                 }),
@@ -289,15 +309,15 @@ Page({
             })
           }
         });
-        
+
       }
     })
 
   },
-  checkImg(){
+  checkImg() {
     wx.chooseImage({
       count: 1,
-      success: async function(res) {
+      success: async function (res) {
         const tempFilePaths = res.tempFilePaths
         try {
           wx.serviceMarket.invokeService({
@@ -306,24 +326,27 @@ Page({
             data: {
               "Action": "ImageModeration",
               "Scenes": ["PORN", "POLITICS", "TERRORISM", "TEXT"],
-              "ImageUrl": new wx.serviceMarket.CDN({ type: 'filePath', filePath: res.tempFilePaths[0]})
+              "ImageUrl": new wx.serviceMarket.CDN({
+                type: 'filePath',
+                filePath: res.tempFilePaths[0]
+              })
             },
           }).then(res => {
             console.log(res.data.Response.Suggestion)
-            let types=res.data.Response.Suggestion
-            if(types=="PASS"){
-              
+            let types = res.data.Response.Suggestion
+            if (types == "PASS") {
+
               wx.navigateTo({
                 url: `./upload/upload?src=${tempFilePaths[0]}`,
               })
-            }else{
+            } else {
               wx.showModal({
                 title: '检测失败',
                 content: "请选择合法图片",
               })
             }
           })
-    
+
         } catch (err) {
           console.error('invokeService fail', err)
           wx.showModal({
@@ -332,8 +355,17 @@ Page({
           })
         }
       },
-      fail: function(res) {},
-      complete: function(res) {},
+      fail: function (res) {},
+      complete: function (res) {},
     })
+  },
+  onLoad() {
+    var modules = wx.getSystemInfoSync()
+         
+    var reg = RegExp(/iOS/);
+      console.log(modules.windowHeight)
+      console.log(modules.windowWidth)
+    
+    
   }
 })
